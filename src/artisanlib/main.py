@@ -43,6 +43,7 @@ import textwrap
 import natsort
 import gc
 import signal
+from playsound import playsound
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 from unidecode import unidecode
@@ -167,6 +168,9 @@ from yoctopuce.yocto_api import YAPI
 
 platf = str(platform.system())
 
+
+def alarm_sound():
+    playsound('c:\\windows\\Media\\alarm01.wav')
 
 #######################################################################################
 #################### Main Application  ################################################
@@ -3536,7 +3540,8 @@ class tgraphcanvas(FigureCanvas):
         aw.sendmessage(QApplication.translate("Message","Alarm {0} triggered", None).format(alarmnumber + 1))
         if not self.silent_alarms:
             if len(self.alarmbeep) > alarmnumber and self.alarmbeep[alarmnumber]:
-                QApplication.beep()
+                #QApplication.beep()
+                alarm_sound()
             try:
                 if self.alarmaction[alarmnumber] == 0:
                     # alarm popup message with 10sec timeout
