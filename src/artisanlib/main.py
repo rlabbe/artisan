@@ -13798,7 +13798,7 @@ class ApplicationWindow(QMainWindow):
     def __init__(self, parent = None):
 
         self.app = app
-        self.superusermode = False
+        self.superusermode = True
 
 #PLUS
         self.plus_account = None # if set to a login string, Artisan plus features are enabled
