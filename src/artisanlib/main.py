@@ -8733,6 +8733,9 @@ class tgraphcanvas(FigureCanvas):
             self.threadserver.createSampleThread()
             if not bool(aw.simulator):
                 self.StartAsyncSamplingAction()
+
+
+            aw.pidcontrol.pidOn()
         except Exception as ex:
             _, _, exc_tb = sys.exc_info()
             aw.qmc.adderror((QApplication.translate("Error Message", "Exception:",None) + " OnMonitor() {0}").format(str(ex)),exc_tb.tb_lineno)
@@ -30811,7 +30814,7 @@ class ApplicationWindow(QMainWindow):
                 startHottop(0.6,aw.ser.comport,aw.ser.baudrate,aw.ser.bytesize,aw.ser.parity,aw.ser.stopbits,aw.ser.timeout)
             res = takeHottopControl()
             if res:
-                setHottop(drum_motor=True)
+                setHottop(drum_motor=True,solenoid=False)
                 aw.button_10.setStyleSheet(aw.pushbuttonstyles["PIDactive"])
                 if not self.HottopControlActive:
                     aw.sendmessage(QApplication.translate("Message","Hottop control turned on", None))
