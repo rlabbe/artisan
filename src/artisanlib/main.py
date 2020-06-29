@@ -337,17 +337,17 @@ if sys.platform.startswith("darwin"):
         if "forkserver" in multiprocessing.get_all_start_methods():
             multiprocessing.set_start_method('forkserver') # only available on Python3 on Unix, currently (Python 3.8) not supported by frozen executables generated with pyinstaller
         elif "fork" in multiprocessing.get_all_start_methods():
-            multiprocessing.set_start_method('fork') # default on Python3.7 for macOS (and on Unix also under Python3.8), but considered unsafe, 
+            multiprocessing.set_start_method('fork') # default on Python3.7 for macOS (and on Unix also under Python3.8), but considered unsafe,
             # not available on Windows, on Python3.8 we have to explicitly set this
             # https://bugs.python.org/issue33725
 #        if "spawn" in multiprocessing.get_all_start_methods():
-#            multiprocessing.set_start_method('spawn') # default on Python3.8 for macOS (always default on Windows) 
+#            multiprocessing.set_start_method('spawn') # default on Python3.8 for macOS (always default on Windows)
 #            # this breaks on starting WebLCDs in macOS (and linux) builds with py2app, pyinstaller
 #            # https://bugs.python.org/issue32146
 #            # https://github.com/pyinstaller/pyinstaller/issues/4865
     except:
         pass
-            
+
 args = sys.argv
 if sys.platform.startswith("linux"):
     # avoid a GTK bug in Ubuntu Unity
@@ -2066,7 +2066,7 @@ class tgraphcanvas(FigureCanvas):
         self.ProbatMiddleware_drum = -1
         self.ProbatMiddleware_fan = -1
         self.ProbatMiddleware_pressure = -1
-        
+
         # used by the Probat Sample extra devices
         self.ProbatSample_drum = -1
         self.ProbatSample_air = -1
@@ -2165,7 +2165,7 @@ class tgraphcanvas(FigureCanvas):
         self.segmentsamplesthreshold = 3
 
         self.stats_summary_rect = None
-        
+
         # temp vars used to truncate title and statistic line (x_label) to width of MPL canvas
         self.title_text = None
         self.title_artist = None
@@ -2174,7 +2174,7 @@ class tgraphcanvas(FigureCanvas):
         self.xlabel_text = None
         self.xlabel_artist = None
         self.xlabel_width = None
-    
+
         self.lazyredraw_on_resize_timer =  QTimer()
         self.lazyredraw_on_resize_timer.timeout.connect(self.lazyredraw_on_resize)
         self.lazyredraw_on_resize_timer.setSingleShot(True)
@@ -2207,7 +2207,7 @@ class tgraphcanvas(FigureCanvas):
         except:
             pass
         self.safesaveflag = False
-    
+
     def lazyredraw_on_resize(self):
         self.lazyredraw(recomputeAllDeltas=False)
 
@@ -2224,7 +2224,7 @@ class tgraphcanvas(FigureCanvas):
 #                QTimer.singleShot(1, lazyredraw_on_resize)
             if ((dw != 0) or (dh != 0)):
                 self.lazyredraw_on_resize_timer.start(10)
-                
+
 
     # update the aw.qmc.deltaBTspan and deltaETspan from the given sampling interval, aw.qmc.deltaETsamples and aw.qmc.deltaBTsamples
     # interval is expected in seconds (either from the profile on load or from the sampling interval set for recording)
@@ -2445,7 +2445,7 @@ class tgraphcanvas(FigureCanvas):
             return -1
         else:
             return self.eventsExternal2InternalValue(float(st))
-    
+
     def fit_titles(self):
         #truncate title and statistic line to width of axis system to avoid that the MPL canvas goes into miser mode
         try:
@@ -2476,7 +2476,7 @@ class tgraphcanvas(FigureCanvas):
                     if prev_xlabel_text != self.xlabel_artist.get_text():
                         redraw = True
                 except:
-                    pass 
+                    pass
             try:
                 if redraw:
                     # Temporarily disconnect any callbacks to the draw event...
@@ -2494,7 +2494,7 @@ class tgraphcanvas(FigureCanvas):
 
         except:
             pass
-    
+
     # hook up to mpls event handling framework for draw events
     # this is emitted after the canvas has finished a full redraw
     def _draw_event(self, _):
@@ -4764,6 +4764,9 @@ class tgraphcanvas(FigureCanvas):
 
     # returns True if nothing to save, discard or save was selected and False if canceled by the user
     def checkSaved(self,allow_discard=True):
+        # I don't want to save profiles, so stop asking!
+        return True
+
         #prevents deleting accidentally a finished roast
         if self.safesaveflag == True and len(aw.qmc.timex) > 3:
             if allow_discard:
@@ -5790,7 +5793,7 @@ class tgraphcanvas(FigureCanvas):
             self.xlabel_artist.set_in_layout(False) # remove x-axis labels from tight_layout calculation
         except: # set_in_layout not available in mpl<3.x
             pass
-    
+
     def setProfileBackgroundTitle(self,backgroundtitle):
         suptitleX = 1
         try:
@@ -5821,7 +5824,7 @@ class tgraphcanvas(FigureCanvas):
                 self.background_title_width = 0
         except:
             self.background_title_width = 0
-    
+
     # if updatebackground is True, the samplingsemaphore is catched and updatebackground() is called
     @pyqtSlot(str,bool)
     def setProfileTitle(self,title,updatebackground=False):
@@ -5833,13 +5836,13 @@ class tgraphcanvas(FigureCanvas):
             bnr = self.roastbatchnr
         if bnr != 0 and title != "":
             title = "{}{} {}".format(bprefix,str(bnr),title)
-            
+
         if aw.qmc.graphfont == 1: # if selected font is Humor we translate the unicode title into pure ascii
             title = toASCII(title)
-        
+
         fontprop_xlarge = aw.mpl_fontproperties.copy()
         fontprop_xlarge.set_size("xx-large")
-        
+
         self.title_text = aw.arabicReshape(title.strip())
         self.title_artist = self.ax.set_title(self.title_text, color=self.palette["title"], loc='left',
                     fontproperties=fontprop_xlarge,horizontalalignment="left",verticalalignment="top",x=0)
@@ -5851,7 +5854,7 @@ class tgraphcanvas(FigureCanvas):
             self.title_width = self.title_artist.get_window_extent(renderer=self.fig.canvas.get_renderer()).width
         except:
             pass
-        
+
         if updatebackground:
             #### lock shared resources #####
             aw.qmc.samplingsemaphore.acquire(1)
@@ -7450,7 +7453,7 @@ class tgraphcanvas(FigureCanvas):
                 self.legendloc_pos = None
                 if takelock and aw.qmc.samplingsemaphore.available() < 1:
                     aw.qmc.samplingsemaphore.release(1)
-                
+
                 # to allow the fit_title to work on the proper value we ping the redraw explicitly again after processing events
                 # we need to use draw_idle here to allow Qt for relayout event processing
                 # calling QApplication.processEvents() is not an option here as the event loop might not have been started yet
@@ -9348,7 +9351,7 @@ class tgraphcanvas(FigureCanvas):
                     aw.soundpop()
                     #prevents accidentally deleting a modified profile.
                     self.fileDirty()
-    
+
                     if self.timeindex[0] > -1:
                         start = self.timex[self.timeindex[0]]
                     else:
@@ -9395,7 +9398,7 @@ class tgraphcanvas(FigureCanvas):
                         #self.fig.canvas.draw() # not needed as self.annotate does the (partial) redraw
                         self.updateBackground() # but we need
                         aw.qmc.phasesLCDmode = aw.qmc.phasesLCDmode_l[1]
-    
+
                 else:
                     message = QApplication.translate("Message","Scope is OFF", None)
                     aw.sendmessage(message)
@@ -9450,7 +9453,7 @@ class tgraphcanvas(FigureCanvas):
                     aw.soundpop()
                     #prevents accidentally deleting a modified profile.
                     self.fileDirty()
-    
+
                     if self.timeindex[0] > -1:
                         start = self.timex[self.timeindex[0]]
                     else:
@@ -9551,7 +9554,7 @@ class tgraphcanvas(FigureCanvas):
                     aw.soundpop()
                     #prevents accidentally deleting a modified profile.
                     self.fileDirty()
-    
+
                     if self.timeindex[0] > -1:
                         start = self.timex[self.timeindex[0]]
                     else:
@@ -9645,7 +9648,7 @@ class tgraphcanvas(FigureCanvas):
                     aw.soundpop()
                     #prevents accidentally deleting a modified profile.
                     self.fileDirty()
-    
+
                     if self.timeindex[0] > -1:
                         start = self.timex[self.timeindex[0]]
                     else:
@@ -9749,7 +9752,7 @@ class tgraphcanvas(FigureCanvas):
                     aw.soundpop()
                     #prevents accidentally deleting a modified profile.
                     self.fileDirty()
-    
+
                     if self.timeindex[0] > -1:
                         start = self.timex[self.timeindex[0]]
                     else:
@@ -9847,7 +9850,7 @@ class tgraphcanvas(FigureCanvas):
                     aw.soundpop()
                     #prevents accidentally deleting a modified profile.
                     self.fileDirty()
-    
+
                     if self.timeindex[0] > -1:
                         start = self.timex[self.timeindex[0]]
                     else:
@@ -9907,7 +9910,7 @@ class tgraphcanvas(FigureCanvas):
                         self.l_annotations += self.annotate(self.temp2[self.timeindex[6]],st1,self.timex[self.timeindex[6]],self.temp2[self.timeindex[6]],self.ystep_up,self.ystep_down,draggable_anno_key=6)
                         #self.fig.canvas.draw() # not needed as self.annotate does the (partial) redraw
                         self.updateBackground() # but we need
-    
+
                         try:
                             # update ambient temperature if a ambient temperature source is configured and no value yet established
                             aw.qmc.updateAmbientTempFromPhidgetModulesOrCurve()
@@ -9966,7 +9969,7 @@ class tgraphcanvas(FigureCanvas):
                         aw.button_4.setFlat(True)
                         aw.button_5.setFlat(True)
                         aw.button_6.setFlat(True)
-    
+
                         try:
                             aw.eventactionx(aw.qmc.buttonactions[6],aw.qmc.buttonactionstrings[6])
                             if self.timeindex[0] > -1:
@@ -10006,16 +10009,16 @@ class tgraphcanvas(FigureCanvas):
                     aw.soundpop()
                     #prevents accidentally deleting a modified profile.
                     self.fileDirty()
-    
+
                     if self.timeindex[0] > -1:
                         start = self.timex[self.timeindex[0]]
                     else:
                         start = 0
                     if aw.button_20.isFlat() and self.timeindex[7] > 0:
                         # undo wrongly set COOL
-    
+
                         st1 = aw.arabicReshape(QApplication.translate("Scope Annotation","CE {0}", None).format(stringfromseconds(self.timex[self.timeindex[7]] - start)))
-    
+
                         if len(self.l_annotations) > 1 and self.l_annotations[-1].get_text() == st1:
                             try:
                                 self.l_annotations[-1].remove()
@@ -10030,7 +10033,7 @@ class tgraphcanvas(FigureCanvas):
                                 del self.l_annotations_dict[7]
                             self.timeindex[7] = 0
                             removed = True
-    
+
                     elif not aw.button_20.isFlat():
                         if self.device != 18 or aw.simulator is not None:
                             self.timeindex[7] = len(self.timex)-1
@@ -12814,7 +12817,7 @@ class VMToolbar(NavigationToolbar):
                 color.setAlpha(tmp.pixelColor(x,y).alpha())
                 tmp.setPixelColor(x,y,color)
         return QPixmap.fromImage(tmp)
-        
+
     # overwritten from MPL v3.2.2 to get rid of that extra data printed
     def mouse_move(self, event):
         self._update_cursor(event)
@@ -13846,7 +13849,7 @@ class ApplicationWindow(QMainWindow):
 
         super(ApplicationWindow, self).__init__(parent)
         self.helpdialog = None
-        
+
         self.setAcceptDrops(True) # enable drag-and-drop
 
         # a timer that is triggered by resizing the main window
@@ -16162,7 +16165,7 @@ class ApplicationWindow(QMainWindow):
         self.level1frame.setLayout(self.level1layout)
 
         level3layout = QHBoxLayout()   # PID buttons, graph, temperature LCDs
-        
+
         pidbuttonLayout = QVBoxLayout()
 
         EventsLayout = QHBoxLayout()
@@ -16381,7 +16384,7 @@ class ApplicationWindow(QMainWindow):
         midleftlayout.addLayout(level3layout)
         midleftlayout.addWidget(self.lowerbuttondialog)
         midleftlayout.addWidget(self.extrabuttondialogs)
-        
+
         midleftlayout.addWidget(self.EventsGroupLayout)
 
         self.slider1 = self.slider()
@@ -17866,7 +17869,7 @@ class ApplicationWindow(QMainWindow):
                     t_min,t_max = aw.calcAutoAxisBackground()
                 else:
                     t_min,t_max = aw.calcAutoAxis()
-                
+
                 if aw.qmc.background:
                     if background:
                         t_max_b = t_max
@@ -18158,7 +18161,7 @@ class ApplicationWindow(QMainWindow):
 #            aw.sendmessage(QApplication.translate("Message","super on",None))
 #        else:
 #            aw.sendmessage(QApplication.translate("Message","super off",None))
-            
+
     @pyqtSlot()
     def superusermodeLeftClicked(self):
         self.superusermode = not self.superusermode
@@ -21447,7 +21450,7 @@ class ApplicationWindow(QMainWindow):
                 self.processingKeyEvent = True
                 key = int(event.key())
                 modifiers = event.modifiers()
-                #Note: Windows only - PyQt will sometimes, but not always, interpret a shortcut key as a menu key.  For that 
+                #Note: Windows only - PyQt will sometimes, but not always, interpret a shortcut key as a menu key.  For that
                 #    reason only CTRL and CTRL+SHIFT modifier should be used with shortcut keys f,e,r,c,t,v, and h.
                 control_modifier = modifiers == Qt.ControlModifier # command/apple key on macOS
                 alt_modifier = modifiers == Qt.AltModifier
@@ -21968,7 +21971,7 @@ class ApplicationWindow(QMainWindow):
                 density_loss = str(aw.float2float(100 *(cp["green_density"] - cp["roasted_density"]) / cp["green_density"],1))
             else:
                 density_loss = "0.0"
-                
+
             #note: since fields are delimited only at the start, to avoid ambiguity requires the shortest field string to be last in the list.  Example, "date_time" must come before "date" in the list.
             fields = [
                 ("batch_long", self.qmc.roastbatchprefix + str(bnr) + ' (' + str(self.qmc.roastbatchpos) + ')'),
@@ -22019,16 +22022,16 @@ class ApplicationWindow(QMainWindow):
                 ("ambpressure",str(cp["ambient_pressure"]) if "ambient_pressure" in cp else "0.0"),
                 ("aucbase",str(cp["AUCbase"]) if "AUCbase" in cp else "0"),
                 ("auc",str(cp["AUC"]) if "AUC" in cp else "0"),
-                ("chargeet",str(cp["CHARGE_ET"]) if "CHARGE_ET" in cp else "0.0"),                
-                ("chargebt",str(cp["CHARGE_BT"]) if "CHARGE_BT" in cp else "0.0"),                
-                ("fcset",str(cp["FCs_ET"]) if "FCs_ET" in cp else "0.0"),                
-                ("fcsbt",str(cp["FCs_BT"]) if "FCs_BT" in cp else "0.0"),                
+                ("chargeet",str(cp["CHARGE_ET"]) if "CHARGE_ET" in cp else "0.0"),
+                ("chargebt",str(cp["CHARGE_BT"]) if "CHARGE_BT" in cp else "0.0"),
+                ("fcset",str(cp["FCs_ET"]) if "FCs_ET" in cp else "0.0"),
+                ("fcsbt",str(cp["FCs_BT"]) if "FCs_BT" in cp else "0.0"),
                 ("dropet",str(cp["DROP_ET"]) if "DROP_ET" in cp else "0.0"),
                 ("dropbt",str(cp["DROP_BT"]) if "DROP_BT" in cp else "0.0"),
                 ("droptime_long", droptime_long),
-                ("droptime",str(int(cp["DROP_time"])) if "DROP_time" in cp else "0"),                
+                ("droptime",str(int(cp["DROP_time"])) if "DROP_time" in cp else "0"),
                 ("devtime_long", devtime_long),
-                ("devtime", devtime),                
+                ("devtime", devtime),
                 ("dtr", dtr),
                 ("roastingnotes_line",roastingnotesline),
                 ("roastingnotes_10",roastingnotesline[:10]),
@@ -22057,7 +22060,7 @@ class ApplicationWindow(QMainWindow):
                 ("hour", self.qmc.roastdate.toString("hh")),
                 ("minute", self.qmc.roastdate.toString("mm")),
                 ]
-    
+
             _ignorecase = re.IGNORECASE  # @UndefinedVariable
             #text between single quotes ' will show only when recording or for preview recording
             fn = re.sub(r"{}([^{}]+){}".format(onDelim,onDelim,onDelim),
@@ -22340,7 +22343,7 @@ class ApplicationWindow(QMainWindow):
                 return url
             else:
                 return None
-    
+
     #the central SaveFileDialog function that should always be called. Besides triggering the file dialog it
     #reads and sets the actual directory
     def ArtisanSaveFileDialog(self,msg=QApplication.translate("Message","Save",None),ext="*.alog",path=None):
@@ -24597,7 +24600,7 @@ class ApplicationWindow(QMainWindow):
                 self.qmc.moisture_roasted = profile["moisture_roasted"]
             else:
                 self.qmc.moisture_roasted = 0.
-            
+
             # only load annotations position if the temperature mode did not change
             if "anno_positions" in profile and self.qmc.mode == m:
                 self.qmc.setAnnoPositions(profile["anno_positions"])
@@ -25554,12 +25557,12 @@ class ApplicationWindow(QMainWindow):
             updateBatchCounter = True
             if filename is not None:
                 settings = QSettings(filename,QSettings.IniFormat)
-                
+
                 # a proper artisan-settings.aset file needs at least to contain a Mode tag
                 if not (theme or machine) and not settings.contains("Mode"):
                     aw.qmc.adderror(QApplication.translate("Error Message","Exception: {} not a valid settings file",None).format(str(filename)))
                     return False
-            
+
                 if aw.qmc.neverUpdateBatchCounter or app.artisanviewerMode:
                     updateBatchCounter = False
                 else:
@@ -26570,7 +26573,7 @@ class ApplicationWindow(QMainWindow):
                     self.qmc.ETbacklinewidth = max(0.1,aw.float2float(toFloat(settings.value("ETbacklinewidth",self.qmc.ETbacklinewidth))))
                     self.qmc.ETbackmarker = s2a(toString(settings.value("ETbackmarker",self.qmc.ETbackmarker)))
                     self.qmc.ETbackmarkersize = max(0.1,aw.float2float(toFloat(settings.value("ETbackmarkersize",self.qmc.ETbackmarkersize))))
-                    
+
                     self.qmc.XTbacklinestyle = s2a(toString(settings.value("XTbacklinestyle",self.qmc.XTbacklinestyle)))
                     self.qmc.XTbackdrawstyle = s2a(toString(settings.value("XTbackdrawstyle",self.qmc.XTbackdrawstyle)))
                     if self.qmc.XTbackdrawstyle == '-':
@@ -32160,7 +32163,7 @@ class ApplicationWindow(QMainWindow):
             if url is None:
                 return
             pass
-            
+
             res = aw.qmc.reset(redraw=False,soundOn=False)
             if res:
                 obj = extractor(url)
@@ -32230,12 +32233,12 @@ class ApplicationWindow(QMainWindow):
     @pyqtSlot(bool)
     def importCropster(self,_=False):
         self.importExternal(extractProfileCropsterXLS,QApplication.translate("Message","Import Cropster XLS", None),"*.xls")
-        
+
     @pyqtSlot()
     @pyqtSlot(bool)
     def importRoastLog(self,_=False):
         self.importExternalURL(extractProfileRoastLog,QApplication.translate("Message","Import RoastLog URL", None))
-        
+
     @pyqtSlot()
     @pyqtSlot(bool)
     def importRoastPATH(self,_=False):
@@ -32770,7 +32773,7 @@ class ApplicationWindow(QMainWindow):
             p.setText(l)
             p.setFocusPolicy(Qt.NoFocus)
             p.clicked.connect(self.recordextraevent_slot)
-            self.buttonlist.append(p)            
+            self.buttonlist.append(p)
             self.buttonStates.append(0)
             #add button to row
             if row1count < self.buttonlistmaxlen:
