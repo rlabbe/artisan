@@ -4733,37 +4733,7 @@ class ApplicationWindow(QMainWindow):  # pyright: ignore [reportGeneralTypeIssue
 
     @pyqtSlot()
     def donate(self) -> None:
-        try:
-            everytime = 4*30*24*60*60 # 4 month in seconds
-            everystarts = 30 # number of recordings
-            starts = None
-            lastdonationpopup = None
-            settings = QSettings()
-            if settings.contains('starts'):
-                starts = toInt(settings.value('starts'))
-            if settings.contains('lastdonationpopup'):
-                lastdonationpopup = toInt(settings.value('lastdonationpopup'))
-            now = int(libtime.time())
-            if not(settings.status() == QSettings.Status.NoError and
-                    lastdonationpopup is not None and
-                    starts is not None and
-                    (now >= lastdonationpopup > now-everytime) and
-                    0 <= starts < everystarts):
-#                message = QApplication.translate('Message', 'Artisan is free to use!<br><br>To keep it free and current please support us<br><br><a href="{0}">{0}</a><br><br>and book<br><br><a href="{1}">{1}</a><br><br>to suppress this dialog')
-#                message = message.format('https://artisan-scope.org/donate/', 'https://artisan.plus')
-                message = QApplication.translate('Message', 'Artisan is free to use!\n\nTo keep it free and current please support us with your donation and subscribe to artisan.plus to suppress this dialog!')
-                donate_message_box = QMessageBox()
-                donate_message_box.setText(message)
-                donate_message_box.setIcon(QMessageBox.Icon.Information)
-                donate_message_box.setModal(True)
-                donate_message_box.setStandardButtons(QMessageBox.StandardButton.Cancel | QMessageBox.StandardButton.Ok)
-                donate_message_box.setDefaultButton(QMessageBox.StandardButton.Ok)
-                res = donate_message_box.exec()
-                if res == QMessageBox.StandardButton.Ok:
-                    QDesktopServices.openUrl(QUrl('https://artisan-scope.org/donate/', QUrl.ParsingMode.TolerantMode))
-                self.resetDonateCounter()
-        except Exception as e: # pylint: disable=broad-except
-            _log.exception(e)
+        pass
 
     @pyqtSlot(str)
     def setCanvasColor(self, c:str) -> None: # pylint: disable=no-self-use # used as slot
