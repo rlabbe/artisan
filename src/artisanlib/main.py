@@ -24234,7 +24234,8 @@ class ApplicationWindow(QMainWindow):  # pyright: ignore [reportGeneralTypeIssue
         if self.HottopControlActive:
             self.HottopControlOff()
         else:
-            self.HottopControlOn(autosuper=False)
+            self.HottopControlOn(autosuper=True)
+            # call start
 
     def HottopControlOff(self) -> None:
         if self.hottop is not None:
@@ -24254,7 +24255,7 @@ class ApplicationWindow(QMainWindow):  # pyright: ignore [reportGeneralTypeIssue
         if autosuper:
             self.superusermode = True
         self.superusermode = True # override no matter what
-        
+
         if self.superusermode: # Hottop control mode can for now activated only in super user mode
             if self.hottop is not None:
                 res = self.hottop.takeHottopControl()
