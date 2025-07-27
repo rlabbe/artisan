@@ -24309,7 +24309,9 @@ class ApplicationWindow(QMainWindow):  # pyright: ignore [reportGeneralTypeIssue
                 dialog.show()
             else:
                 #self.pidcontrol.togglePID()
+                self.qmc.ToggleRecorder()
                 self.toggleHottopControl()
+                #self.qmc.ToggleMonitor()
         # all other devices
         else:
             modifiers = QApplication.keyboardModifiers()
