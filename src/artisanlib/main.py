@@ -25,7 +25,7 @@ from artisanlib import __version__
 from artisanlib import __revision__
 from artisanlib import __build__
 
-from artisanlib import __release_sponsor_name__
+__release_sponsor_name__ = None
 
 ## Profiling: use @profile annotations
 #import cProfile
@@ -3227,8 +3227,8 @@ class ApplicationWindow(QMainWindow):  # pyright: ignore [reportGeneralTypeIssue
         self.buttonONOFF.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.buttonONOFF.setMinimumHeight(self.standard_button_height)
         self.buttonONOFF.clicked.connect(self.qmc.ToggleMonitor)
-        if self.app.artisanviewerMode:
-            self.buttonONOFF.setVisible(False)
+        #if self.app.artisanviewerMode:
+        self.buttonONOFF.setVisible(False)
 
         #create START/STOP buttons
         self.buttonSTARTSTOP: QPushButton = QPushButton(QApplication.translate('Button', 'START'))
@@ -3242,8 +3242,8 @@ class ApplicationWindow(QMainWindow):  # pyright: ignore [reportGeneralTypeIssue
 
         self.buttonSTARTSTOP.setMinimumHeight(self.standard_button_height)
         self.buttonSTARTSTOP.clicked.connect(self.qmc.ToggleRecorder)
-        if self.app.artisanviewerMode:
-            self.buttonSTARTSTOP.setVisible(False)
+        #if self.app.artisanviewerMode:
+        self.buttonSTARTSTOP.setVisible(False)
 
         #create 1C START, 1C END, 2C START and 2C END buttons
         self.buttonFCs: MinorEventPushButton = MinorEventPushButton(QApplication.translate('Button', 'FC\nSTART'))

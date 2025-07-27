@@ -19,9 +19,9 @@ from artisanlib import __version__
 from artisanlib import __revision__
 from artisanlib import __build__
 
-from artisanlib import __release_sponsor_domain__
-from artisanlib import __release_sponsor_url__
-
+# get rid of sponser info
+__release_sponsor_domain__ = None
+__release_sponsor_domain__ = None
 import gc
 import time as libtime
 import os
