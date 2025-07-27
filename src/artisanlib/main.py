@@ -24253,6 +24253,8 @@ class ApplicationWindow(QMainWindow):  # pyright: ignore [reportGeneralTypeIssue
         # on just pressing the CONTROL button the superusermode is not automatically activated and has to be activated manually by the user (for safety reasons)
         if autosuper:
             self.superusermode = True
+        self.superusermode = True # override no matter what
+        
         if self.superusermode: # Hottop control mode can for now activated only in super user mode
             if self.hottop is not None:
                 res = self.hottop.takeHottopControl()
