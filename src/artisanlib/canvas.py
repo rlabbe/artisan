@@ -7471,30 +7471,6 @@ class tgraphcanvas(FigureCanvas):
 
     # returns True if nothing to save, discard or save was selected and False if canceled by the user
     def checkSaved(self,allow_discard:bool = True) -> bool:
-        #prevents deleting accidentally a finished roast
-        flag = self.safesaveflag
-        self.safesaveflag = False
-        if flag and len(self.timex) > 3:
-            string = QApplication.translate('Message','Save profile?')
-            if allow_discard:
-                buttons = QMessageBox.StandardButton.Discard|QMessageBox.StandardButton.Save|QMessageBox.StandardButton.Cancel
-            else:
-                buttons = QMessageBox.StandardButton.Save|QMessageBox.StandardButton.Cancel
-#On macOS, if the modality is set to Qt::WindowModal and the message box has a parent, then the message box will be a Qt::Sheet,
-#otherwise the message box will be a standard dialog.
-# setWindowModality(Qt.WindowModality.WindowModal)
-            reply = QMessageBox.warning(None, #self.aw,  # only without super this one shows the native dialog on macOS under Qt 6.6.2 and later
-                QApplication.translate('Message','Profile unsaved'), string, buttons)
-            self.safesaveflag = flag
-            if reply == QMessageBox.StandardButton.Save:
-                return bool(self.aw.fileSave(self.aw.curFile))  #if accepted, calls fileClean() and thus turns safesaveflag = False
-            if reply == QMessageBox.StandardButton.Discard:
-                self.fileCleanSignal.emit()
-                return True
-            if reply == QMessageBox.StandardButton.Cancel:
-                self.aw.sendmessage(QApplication.translate('Message','Action canceled'))
-            return False
-        # nothing to be saved
         return True
 
     def clearLCDs(self) -> None:
